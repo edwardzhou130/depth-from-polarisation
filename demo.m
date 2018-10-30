@@ -6,7 +6,7 @@ load sampleData.mat
 
 % Assume refractive index = 1.5
 n = 1.5;
-
+theta_est = rho_diffuse(rho_est,n);
 % Estimate light source direction from diffuse pixels (note that you might
 % get a convex/concave flip)
 %[ s,T,B ] = findLight( theta_est,phi_est,Iun_est,mask&~spec,3 );
@@ -15,17 +15,17 @@ s = [2 0 7]';
 [ s,T,B ] = findLight( theta_est,phi_est,Iun_est,mask&~spec,3,s );
 
 % Compute angles, taking into account different model for specular pixels
-theta_est_combined = rho_diffuse(rho_est,n);
-theta_s = rho_spec(rho_est(spec),n);
-theta_est_combined(spec)=theta_s;
-phi_est_combined = phi_est;
-phi_est_combined(spec)=mod(phi_est(spec)+pi/2,pi);
+% theta_est_combined = rho_diffuse(rho_est,n);
+% theta_s = rho_spec(rho_est(spec),n);
+% theta_est_combined(spec)=theta_s;
+% phi_est_combined = phi_est;
+% phi_est_combined(spec)=mod(phi_est(spec)+pi/2,pi);
 
 % Compute boundary prior azimuth angles and weight
 [ azi,Bdist ] = boundaryPrior( mask );
 
 % Run linear height from polarisation
-[ height ] = HfPol( theta_est_combined,min(1,Iun_est),phi_est_combined,s,mask,false,spec );
+[ height ] = HfPol( theta_est,min(1,Iun_est),phi_est,s,mask,false,spec );
 
 % Visualise
 figure;
